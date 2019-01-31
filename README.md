@@ -281,3 +281,139 @@ But don't do that just yet.
 We don't want that to happen because we're going to use this data elsewhere in our project.
 So that covers how to create, read, update, and delete data from the Mongo console.
 Now we're going to have a look at how to do that with Python programmatically.
+
+# Run Mongo Commands From A Python File
+
+## What is it?
+
+Using Python to run your Mongo commands.
+
+
+## What does it do?
+
+Allows you to programmatically create, query and update your database entries.
+
+
+## How do you use it?
+
+By writing and running python code in a .py file.
+
+LESSON:
+
+In our last video, we learned how to use MongoDB from the command-line using the Mongo shell.
+In this video, we're going to see how we can do that programmatically using Python.
+First, we need to install some extra libraries so that the Python Mongo library will work.
+So from the terminal, type in our command here: sudo apt-get install build-essential python-dev.
+When that's installed, we'll just clear the screen.
+Then we can install pymongo using sudo pip3 install pymongo.
+This will install the Python 3 version of pymongo, which is the one that we want to use.
+Now we've done that, just go back to our mLab page and click on the database we created.
+And here, as you can see, we have the section to connect using a driver via the standard MongoDB URI.
+So let's take that and copy it.
+Type export MONGO_URI=
+And then paste in the string that we copied from our other screen.
+Now as before, we need to replace dbuser with our username, which is root in my case, and dbpassword with our password, which was r00tUser.
+We press ENTER and this sets an environment variable.
+If we type echo $MONGO_URI, we can see it prints back.
+And the reason that we're doing this is because in production, when our code is live on a server, we don't want to go exposing these types of connection strings, particularly when they contain passwords.
+So let's go ahead and create a new Python file called mongo.py and open it up.
+First of all, install import pymongo.
+Then we'll import os.
+And we're going to use the os library to set a constant called MongoDB_URI by using the getenv() method to read in the environment variable that we just set.
+We'll set another constant called DBS_NAME and give that the name of our database.
+And then another constant called COLLECTION_NAME.
+And we'll give that the name of our MongoDB collection.
+Notice once again that the Python constants are all written in capital letters with underscores separating the words.
+So now we'll create our Mongo connect function.
+So we'll define mongo_connect.
+It's going to take url as an argument.
+And we'll do a try except block here.
+conn = pymongo.MongoClient(url)
+If that works, then we'll print Mongo is connected to the screen.
+And we'll return our connection object: return conn.
+Now if we have an exception, if pymongo throws an error with a connection failure for example, then we shall print "Could not connect to MongoDB".
+And we'll also print the error message.
+So that's our basic Mongo connection string.
+So let's get our indent level right here. We need to be right back at the beginning.
+Let's call our function now.
+conn = mongo_connect(MONGODB_URI).
+And then we'll set our collection name.
+coll = conn[DBS_NAME][COLLECTION_NAME]
+So that will set our collection.
+And now that we've done that, let's try printing everything that's in the database.
+So we'll create a new variable. Call it documents.
+And very similar to how we did from the command-line, we'll do coll.find().
+We'll call the find() method.
+And that will be returned in documents.
+Now this returns a MongoDB object.
+So to iterate through that, we'll do for doc in documents and then print the doc to the screen.
+Let's try that: python3 mongo.py.
+Mongo is connected.
+And as we can see, we have the contents of our database printed to screen.
+Each of the records that we added earlier through the command shell and through the web interface are there.
+So that's how to print all of them.
+What about if we wanted to insert a new record?
+Well, let's create a new variable. We'll call it new_doc.
+And again, we just pass in the key value pairs.
+We'll create Douglas Adams here.
+Notice again that we're putting the field names in quotes.
+And I'm using single quotes here, just for the sake of consistency.
+So we're going to supply all of the values.
+Hair color was grey, his occupation was a writer, and his nationality was English.
+So we just create another dictionary with key value pairs.
+We're assigning this to our variable new_doc.
+And when we've done that, again just coll.insert(new_doc).
+And we're going to keep our find() method here as well and iterate through that so that we can print everything to screen again and see that what we've done has worked.
+So we're going to define our new doc, insert it, and then find all.
+Let's just clear the screen here and run it again.
+And as we can see, our final record there has an occupation of writer, and it's Douglas Adams.
+What if we wanted to insert more than one record, like we did before?
+Well, this is very similar.
+Let's just delete everything that we've put here because we don't want to add more than one Douglas Adams into our database.
+And to do this, we're going to create a variable called new_docs.
+And we send an array of dictionaries.
+So I'm going to add Sir Terry Pratchett here.
+And then when we've done that, we put a comma at the end of our first dictionary, and then we create our second dictionary in the array.
+And this time, we'll create George RR Martin.
+So we close off our dictionary, and then we close off our array.
+And this time, we use the insert_many() method.
+So it'll send new_docs.
+So instead of insert, it's now insert_many.
+And we'll retain our find() method.
+Let's just clear the screen.
+Run it.
+And as we can see now, after Douglas Adams, we have Terry Pratchet and George RR Martin who've also been added.
+So that's how we can create new data in our MongoDB database.
+What if we wanted to find specific data?
+Well, again, we use the find() method, as we did before.
+And we just send in our key value pairs in a dictionary of what it is that we're searching for.
+So let's say that we want to find everyone in the database whose first name is Douglas.
+Let's clear the screen.
+And as we can see, that's what is returned.
+Now we can also delete data by passing in a string like that.
+coll.remove({'first': 'douglas'}).
+Let's add back our find() method again.
+We want to find everything.
+And we'll just take off the documents= on the front of coll.remove there.
+Let's run it again.
+And now we can see that Douglas Adams has indeed been removed from the database.
+So that's how to remove.
+What about if we wanted to update some data in the database?
+Well again, we can use the update_one() method.
+The first argument that we send in is a search string.
+So in this case, we're looking for all whose nationality is American.
+We then send in a key value pair, a dictionary as our second argument again.
+We put this $set keyword.
+And then we create another key value pair dictionary.
+So this time, if they are American, we want to set hair color to maroon.
+And just make sure we have the closing brackets right on that.
+And let's just filter our database now in our find() method by sending in a dictionary there with the nationality of American.
+We'll save that, clear it, run it again.
+And we can see, just like you did before, that one of our records has changed, the first one in the database, hair color, changed to maroon.
+George Martin's hair color has stayed the same.
+So to change that, we can just change our method to update_many.
+Let's clear it and run it again.
+And now, indeed, you can see that all of the records have been changed.
+So that's the basics of how to do CRUD, Create, Read, Update, and Delete, using Python to access MongoDB.
+In our next video, we're going to put all of this together and do a small walk-through project of our persons database.
+
