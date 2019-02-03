@@ -427,3 +427,325 @@ And now, indeed, you can see that all of the records have been changed.
 So that's the basics of how to do CRUD, Create, Read, Update, and Delete, using Python to access MongoDB.
 In our next video, we're going to put all of this together and do a small walk-through project of our persons database.
 
+# Introduction
+
+##  is it?
+
+A simple menu-driven front end to our database.
+
+## What does it do?
+
+Provides an easy way of interfacing with our database.
+
+## How do you use it?
+
+LESSON:
+
+For our walkthrough project in the MongoDB unit, we're going to build a simple frontend to interface with our database.
+This frontend will allow us to perform all of the Create, Read, Update, and Delete operations, but through a menu-driven interface.
+We're going to build a couple of helper functions to assist us.
+And this also will combine all of what we've learned with regard to MongoDB and Python so far.
+End of transcript. Skip to the start.
+
+# Create Your Menu
+ 
+## What is it?
+
+A menu of options that allow a user to manipulate data in your database.
+
+
+## What does it do?
+
+Provides a user with CRUD options - i.e. to create, read, update or delete data.
+
+
+## How do you use it?
+
+You use a Python 'while' loop to show the menu to a user and to ask them to select a CRUD option.
+
+LESSON:
+
+Start of transcript. Skip to the end.
+So to get started with our walkthrough project, let's create a new file.
+And we're going to call it mongo_project.py.
+So when that's created, open it up.
+And what we're just going to do is copy and paste the connection string from our previous project.
+So just take everything down to the end of our mongo_connect() function.
+We'll copy that, and we'll paste it in.
+And as you can see, it's exactly the same.
+We're going to get our MONGO_URI from an environment variable.
+We're using the same database and the same collection.
+The only thing we're going to do here is remove our print "Mongo is connected" statement because we really don't want that to be printing at the top of our menu every time.
+So now that we have our function created for our Mongo connection, we can go ahead and create our show_menu() function.
+So we're going to define our function called show_menu.
+And again, just at the top here, we'll print a blank line to leave some space.
+And then we'll print each of our options.
+So option 1 is add a record.
+Option 2 is to find a record by name.
+Option 3 is to edit a record.
+And option 4 is to delete a record.
+So this is the full CRUD, Create, Read, Update, and Delete.
+And then option 5 is, quite simply, to exit.
+Just pull that up a little bit there.
+So now that we've done that, let's create a variable. We'll call it option.
+And it's going to take the return of our input here.
+So we're going to ask to enter an option.
+And our function will then return the option that we've selected.
+So now that we've done that, we need to define our main loop.
+So this will continue to call the menu every time we come back to it.
+So main_loop.
+Again, like we did before, we're going to use while True, which means that it will basically run forever.
+And we're going to store the result of our show menu function in a variable called option.
+So if option= 1, then, for now, we're just going to print the option that we selected.
+In our next video, we'll start creating these functions, but, for now, let's just make sure that our menu works.
+So if option is 1, we'll just print "You have selected option 1".
+If it's 2, we'll print "You have selected option 2".
+And so on and so forth for the rest of our options.
+And finally, if we select option 5, then we can close our connection.
+We're going to use the same connection name variable as we did before.
+And we can add a break, which exits from the program.
+And finally, right at the very end here, we can put in our else statement.
+So if we don't select options 1, 2, 3, 4, or 5, then it's going to print "Invalid option".
+Just pop another blank line in here.
+And that's our main_loop() function created.
+So now to create our connection object from Mongo, we can go back to our previous project, our mongo.py file, like we did earlier.
+We'll take the connection and the collection object definitions, copy those, and paste them in.
+So that will call our Mongo connection.
+It will create our Mongo collection.
+And then we just need to call our main_loop, which will continue to display our menu and process the options.
+So now we've done that, let's save our file, go to our terminal window and type python3 mongo_project.py.
+As we can see, our menu is displayed. We have no errors, so obviously it's connecting okay to Mongo.
+And we'll select option 5 to exit.
+So that's our menu-driven frontend.
+In our next video, we'll start implementing more functions for the CRUD functionality, i.e. Create, Read, Update, and Delete.
+
+## Add Data
+ 
+## What is it?
+
+A function called add_record.
+
+## What does it do?
+
+The add_record will allow users to add data.
+
+## How do you use it?
+
+When a user selects the option 'Add a record' from the menu options the add_record function will be called. This function will enable the user to add a data record to the database.
+
+LESSON:
+
+Now we have our menu up and running.
+In this video, we're going to add two functions.
+The first one is a function to allow us to add records, and the second one is a helper function, which will assist us in our next video.
+So let's go ahead and have a look at our menu here.
+What we want to do now is delete our print statement.
+And we're going to call our new function add_record().
+So replace the print function with that.
+Now that that's added, we can go up above the main_loop, and let's add that function, def add_record():
+And we want to start adding our data.
+What data are we wanting to get?
+Well, we're looking for the first name, the last name, the date of birth, and so on.
+So let's do that.
+For our first name, we're going to put input("Enter first name>").
+For our last name, input("Enter last name>")
+So on and so forth for our date of birth, our gender, our hair color, our occupation, and, finally, our nationality.
+So this will prompt us to enter this information and store it in each of these variables.
+Once we've done that, then we can start building our dictionary to insert into the database.
+So create a new variable called new_doc.
+And we'll start building the dictionary.
+So as we can see, we're doing it exactly the same as we did before, but this time we're putting the variable names in.
+And we're also calling the lower() method on our first and our last name.
+The reason for this is that we want it to be stored in the database.
+We want the first and the last name to be stored in the database in lowercase, which will make it much easier for us to find later.
+So add all of these in, each of the keys and the values.
+The values, of course, are the variables that we just created above.
+And when we've done that, we'll create another try except block.
+So as we learned in our previous videos, we're going to just do coll.insert and our document dictionary.
+We'll then print a blank line, and, assuming that all has gone well, we'll print "Document inserted".
+Of course, we could have an error.
+So if there's an exception, then we're just going to do a very generic error and print "Error accessing the database".
+Of course, in a real world scenario, we'd want to be drilling this down and catching specific errors and acting on them, but this is sufficient for what we need to do.
+Let's go back to our command prompt and run python3 mongo_project.py
+Select option 1 to add a record.
+And we can see we get prompted for our data.
+This time, we're going to add Saoirse Ronan.
+Her date of birth, according to Wikipedia, is the 12th of April, 1994.
+Enter all of the other details, as well.
+Her occupation and her nationality.
+And we get Dkocument inserted.
+Now of course at the moment, we don't have our find functionality, so we can't actually find this.
+We'll get onto that in the next video.
+But before then, we want to create a little helper function, which is going to assist us with our find, edit, and delete functions later on.
+The reason for this is that this code is reusable.
+We don't want to keep writing it out each time.
+So above our add_record() function, let's define another one called get_record().
+And our searches to find records, edit records, or delete records are going to be based by name.
+We want to get the first name again and the last name.
+We'll do the same as we did in our add_record() function.
+We're just going to store the first name in first, the last name in last.
+We'll have a try except block again.
+The variable doc should hold a cursor object if we're able to find our record.
+So we're going to do col.find_one({'first': first.lower()})
+And again, we're doing first.lower, so whatever mix of case we put in our input, it'll convert it to lowercase, which will find it in our database.
+And then we're going to do the same for our last name as well, so our last key and last.lower().
+Just remember to get the brackets right at the end. Cloud9 does help us here.
+So our exception, again, will be error accessing the database.
+So what happens if no documents are returned, if the record that we're looking for is not found?
+Well, then an empty variable will be returned, an empty object.
+If it's empty, if there is nothing in there, then we're going to print another blank line, and then say "Error! No results found".
+And then after that, we're going to return our document object.
+It may be empty, or it may have results in it, but we will have an error message above to tell us.
+So at the moment, our little helper function doesn't do anything. We don't call it anywhere.
+We're going to do that in the next video when we add find, update and delete functionality to our project.
+
+# Find, Update And Delete Data
+ 
+## What is it?
+
+A number of functions called find_record, edit_record and delete_record. We'll also use a helper function called get_record.
+
+## What does it do?
+
+The functions will enable a user to read back, edit and delete data records.
+
+## How do you use it?
+
+When a user selects the option 'Find a record by name','Edit a record' or 'Delete a record' from the menu options the relevant function will be called to enable the user to perform their selected option.
+
+LESSON:
+
+Start of transcript. Skip to the end.
+In our final video, we're going to add find, update, and delete functionality to our app.
+So that will give us the full range of CRUD operations, Create, Read, Update, and Delete in our menu-driven app.
+So go ahead and add a new function after our add function.
+This one's going to be called find_record.
+So def find_record().
+And now what we're going to do is define a variable, which gets the results of our get_record() function.
+So remember that's a little helper function that we wrote to actually find the information.
+And we have a cursor object here, which consists of the dictionary containing the results.
+So if we do have some results, then we want to print a blank line first.
+And then we're going to use a for loop to iterate through the keys and values.
+So for k,v in doc.items().
+So we're calling the items method here to step through each individual value in our dictionary.
+The first thing we want to check is if the key is not equal to ID.
+ID, if you remember, is that default key that is created by Mongo.
+We don't want that to be displayed.
+So if the key is not equal to ID, then let's print the key.
+We will put the capitalized method on it, so that we get the first letter capitalized.
+Plus a colon.
+And then plus the value again with the first letter capitalized.
+Remember that we stored our data in lowercase, so we want to capitalize it again, just to make it look nice.
+So now all that's left to do here is to go to our option 2, take out our print statement, and call our find_record() function.
+So let's go back to our command prompt and see if that works.
+So open the terminal window.
+Just clear this.
+We'll run it again.
+And what we should be able to do this time, then, is select option 2, which will prompt us for a first name and a last name.
+So let's search for Saoirse Ronan again.
+And here we can see that all of the data is returned: actress, name, gender, date of birth, nationality, and hair color.
+Now our find functionality, as we said, will work for any record in the database.
+And we'll try with Terry Pratchett.
+You can see that we get his information back.
+And because of the fact that we're using the lower() function, we can actually put in any mix of case here if we want, and it will still find the data correctly.
+We've tested our find functionality.
+We now know that that's working.
+So let's go back into our project and add the functionality to edit a record.
+So, again, after our find_record() function, we'll add in some blank lines here.
+We want to define a new function called edit_record().
+Again, we are going to store the results of our get_record() function in doc.
+And we're going to check to see if there is something in the dictionary, so if doc:
+And this time, we're going to create an empty dictionary called update_doc, and we're going to add to that dictionary. We're going to build that as we go on to iterate through our keys and our values.
+That dictionary will form the basis of what we're going to use and insert into the database.
+So we'll print another blank line.
+Again, it's the same thing. We're going to iterate through using k,v in doc.items.
+And yet again, we also want to filter out the ID field. We don't want to be editing that.
+So what we're going to do this time, then, is that as we're iterating through, we're going to add our update_doc dictionary.
+So we're going to provide the key for our update_doc dictionary.
+And the value for that is going to be equal to our input here.
+So we're going to capitalize the k as our prompt.
+I'm going to put a + "["+ v +"]
+And the reason that we're doing this is that we want the value to appear in these square brackets so that we can see what the current value of them is.
+So k is the key, and v is the value.
+We should get a prompt that contains both the key and what the value is currently set to.
+Now, we don't always want to change every single piece of information.
+So what we're going to do here is put in a check.
+If we haven't actually entered anything for update_doc, if we've just left it blank, we don't actually want to delete the information that's in there.
+We just want to leave it the same as it was before.
+We're going to set update_doc[k] back to the value of v.
+And that keeps it at its original setting.
+So when we've done that, let's come right back out on the indent here.
+I'm going to have a try except block again.
+And we're going to call the coll.update_one() method.
+It's the current document that we want to update.
+We put the set keyword in there with the $ in front.
+And then the dictionary that we're going to pass in is our update_doc dictionary that we just created.
+Print a blank line.
+And then say that our document was updated.
+And now for except, we have an error, so we'll have our usual "Error accessing the database".
+So from here, all we need to do now, then, is edit our menu.
+We want to take out option 3, our print statement, and instead, we're going to put in our edit_record() function that we've just created.
+Let's save that.
+We'll go back to our terminal window, and we'll run our project and see what happens.
+So this time, when we select option 3, we're asked again for a first name and a last name.
+And now, as we can see, we get each of the keys and the values coming up.
+Now, we've left the first two blank. kWe don't want to change those.
+Let's say that she's starring in a new film, so this time she has to have brown hair.
+So we'll change that.
+And let's even say that she's changing her occupation. She's now a CEO.
+Everything else stays the same.
+So document has been updated.
+Now if we select option 2 to find the record by name, so again Saoirse and Ronan, we can see indeed that her hair color and her occupation have been updated.
+So when we left it blank, the default values were kept for the field.
+We're coming up to the end then. All we need to do now is add delete functionality.
+So while we're in our menu, we might as well change option 4 straightaway.
+We're going to call our next function delete_record().
+So we'll call that.
+And then, after our edit_record() function, let's define it.
+def delete_record():
+And, as we're now familiar with, we're going to store the results of our get_record() function in the doc variable.
+And we're going to check if any results were returned.
+If they are, print a blank line.
+Then, much as we did with our find() function, we're going to iterate through and print each of the values.
+And the reason we're going to do this is we want to be sure that we're deleting the right document.
+We don't just want to go ahead and delete it without asking and confirming.
+So again, we'll filter out the ID.
+We'll capitalize our key.
+We'll have a colon separating the key and the value.
+We'll capitalize the first letter of our value as well.
+So now we've done that, we'll print a blank line.
+And this time, we're going to create another variable called confirmation.
+And that's going to store the results of an input statement.
+And our input is going to prompt us to say 'Is this the document you want to delete?'.
+We'll put a new line in there and then have Y or N, yes or no, and our little greater than sign as well to provide a prompt.
+And, of course, another blank line underneath.
+So we're asking the user for confirmation that this is the document they actually want to delete.
+So we'll just move the screen up a bit.
+If confirmation.lower() == 'y', then we're going to try coll.remove.
+And we're going to remove the doc.
+Then we'll print document deleted.
+If that doesn't work, then we put our exception in place.
+And we're going to print "Error accessing the database".
+And finally, we'll just add an else statement here to our if.
+So if we type anything other than Y, then it's just going to print "Document not deleted" and return to the main menu.
+So that's our delete function that's now up and working as well.
+Let's just clear the screen and test it.
+So when we ask to delete a record, choosing option 4, then, yet again, we're asked for a first name and a last name.
+So the name that we will provide this time is Terry Pratchett.
+So yes, that finds him.
+Is this a document you want to delete?
+We won't type Y or N. We will type F, so we get "Document not deleted".
+We'll try that again.
+I'll enter Terry Pratchett.
+We find him, and this time we will answer Y.
+Document has been deleted.
+So now when we try to find him with option 2 Terry Pratchett, we get no results found.
+Well done for completing this module.
+We've learned how to create a MongoDB database in the cloud and how to add data to it using the mLab web frontend.
+We've also seen how to install Mongo's command-line tools and use them for the basic CRUD operations of creating, reading, updating, and deleting data.
+Finally, we saw how to talk to a MongoDB database using the pymongo library in Python and brought all of that together in our walkthrough project at the end of this module.
+In future lessons, we're going to look at how to get this displaying on your own website by integrating Python, pymongo, and the Flask mini framework.
+
+
+   
+
