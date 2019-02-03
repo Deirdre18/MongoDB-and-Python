@@ -298,6 +298,16 @@ Allows you to programmatically create, query and update your database entries.
 
 By writing and running python code in a .py file.
 
+## Commands used
+
+$ sudo apt-get install build-essential python-dev
+
+$ sudo pip3 install pymongo
+
+$ export mongo_URI="mongodb://root:trickORTREAT0301@ds163162.mlab.com:63162/mydbtest1"
+
+echo $MONGO_URI (we use this command, as in production when our code goes live, we don't want to expose passwords contained in these kind of connection strings).
+
 LESSON:
 
 In our last video, we learned how to use MongoDB from the command-line using the Mongo shell.
